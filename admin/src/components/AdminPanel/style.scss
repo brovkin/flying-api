@@ -1,0 +1,11 @@
+.admin-panel {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__logo {
+    width: 35px;
+  }
+}
