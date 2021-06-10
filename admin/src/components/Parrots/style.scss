@@ -1,0 +1,90 @@
+.parrots {
+  &__table {
+    &-habitat {
+      &-list {
+        display: flex;
+        align-items: center;
+        justify-items: flex-start;
+
+        &-img {
+          max-width: 30px;
+          height: auto;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    &-colors {
+      &-list {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-items: flex-start;
+      }
+    }
+  }
+
+  &__add-form {
+    &-color {
+
+      &-preview {
+        height: auto;
+        width: 300px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px 0 rgb(0 0 0 / 30%);
+
+        &-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      &-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        margin: 10px 0;
+        align-items: center;
+      }
+
+      &-current {
+
+      }
+
+      &-check {
+        background-color: #fff;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  &__edit-form {
+    &-habitat {
+      &-option {
+        display: flex;
+        align-items: center;
+      }
+
+      &-flag {
+        width: 20px;
+        height: auto;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  &__color {
+    &-item {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px 0 rgba(0 0 0 / 10%);
+    }
+  }
+}

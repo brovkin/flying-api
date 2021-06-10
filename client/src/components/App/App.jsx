@@ -1,33 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import Loader from 'react-loader';
-import {getData} from "../../utils";
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { useRoutes } from '../../routes';
+import { useDispatch } from 'react-redux';
+import { getParrots } from '../../features/parrots/parrotsSlice';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../assets/styles/index.scss';
 
 const App = () => {
-  const [items, setItems] = useState([]);
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    getData('http://localhost:8000/notes').then(data => {
-      setItems(data);
-      setLoaded(true);
-    })
-  }, [])
+  const routes = useRoutes();
+  const dispatch = useDispatch();
 
-  const renderItems = (data) => {
-    return data.map((item, index) => <li key={index}>
-      <div>Title: {item.title}</div>
-      <div>Text: {item.text}</div>
-    </li>)
-  }
+  useEffect(() => {
+    /**
+     * Все основные запросы
+     */
+    dispatch(getParrots());
+  }, []);
 
   return (
-    <div>
-      <Loader loaded={loaded}>
-        <ul>
-          {renderItems(items)}
-        </ul>
-      </Loader>
-    </div>
-  )
-}
+    <Router>
+      <div className="container mt-4">{routes}</div>
+    </Router>
+  );
+};
 
 export default App;

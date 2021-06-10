@@ -73,8 +73,6 @@ router.post("/update_pass/:id", async (req, res) => {
 
   if (!user) res.status(400).json({ status: "fail", msg: "no user" });
 
-  console.log("user", user);
-
   // check current password and compare it from db
 
   const { current_password, new_password, repeat_new_password } = req.body;

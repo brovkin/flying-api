@@ -6,6 +6,7 @@ export const apiRequest = (method, link, body) => {
   if (method === 'POST') {
     return axios.post(`${MAIN_API}/api/v1${link}`, body, {
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
@@ -14,6 +15,7 @@ export const apiRequest = (method, link, body) => {
   if (method === 'GET') {
     return axios.get(`${MAIN_API}/api/v1${link}`, {
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
@@ -22,6 +24,7 @@ export const apiRequest = (method, link, body) => {
   if (method === 'PUT') {
     return axios.put(`${MAIN_API}/api/v1${link}`, body, {
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
@@ -30,6 +33,7 @@ export const apiRequest = (method, link, body) => {
   if (method === 'DELETE') {
     return axios.delete(`${MAIN_API}/api/v1${link}`, {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });

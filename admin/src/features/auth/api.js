@@ -11,7 +11,6 @@ const auth = async (authParams) => {
 };
 
 const getUser = async (token, userId) => {
-  console.log('token', token);
   const response = await axios.get(MAIN_API + '/api/v1/users/authorize', {
     headers: {
       Authorization: 'Bearer ' + token,

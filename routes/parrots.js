@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const path = require("path");
+const getColors = require("get-image-colors");
+const Vibrant = require("node-vibrant");
+const ColorThief = require("colorthief");
 const Parrot = require("../models/parrots");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
@@ -39,11 +43,18 @@ const upload = multer({
 router.get("/", (req, res) => {
   Parrot.find((err, data) => {
     if (err) return res.json({ status: "fail" });
-    console.log("DATA", data.length);
     res.setHeader("x-total-count", data.length);
     res.header("Access-Control-Expose-Headers", "x-total-count");
     res.status(200).json(data);
   });
+});
+
+// getImage
+
+router.post("/getImage", upload.single("image"), async (req, res) => {
+  const pathToImage = "../public/" + req.file.filename;
+
+  await res.status(200).json({ preview: pathToImage });
 });
 
 // ADD ONE FROM FORM
@@ -52,6 +63,14 @@ router.post("/add", upload.single("image"), async (req, res) => {
   const url = req.protocol + "://" + req.get("host");
 
   const params = req.body;
+
+  /**
+   * Если есть массив в значениях, тогда парсим его
+   */
+
+  // TODO
+  params.habitat = JSON.parse(params.habitat);
+  params.colors = JSON.parse(params.colors);
 
   if (req.file) {
     params.image = url + "/public/" + req.file.filename;
@@ -71,11 +90,9 @@ router.post("/add", upload.single("image"), async (req, res) => {
   parrotData
     .save()
     .then((item) => {
-      console.log("Result", item);
       res.status(200).json({ status: "ok", parrot: item });
     })
     .catch((err) => {
-      console.log("Error", err);
       res.status(400).json({ status: "fail" });
     });
 });
@@ -90,7 +107,9 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
 
   const params = req.body;
 
-  console.log("params", params);
+  // TODO переделать
+  params.habitat = JSON.parse(params.habitat);
+  params.colors = JSON.parse(params.colors);
 
   if (req.file) {
     params.image = url + "/public/" + req.file.filename;
@@ -109,14 +128,28 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
 
 // DELETE ONE BY ID
 
-router.delete("/:id", (req, res) => {
-  Parrot.remove({ _id: req.params.id })
-    .then((result) => {
-      res.status(200).json({ status: "ok" });
-    })
-    .catch((err) => {
-      res.status(400).json({ status: "fail" });
-    });
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const parrot = await Parrot.findById(id);
+
+  const { image } = parrot;
+
+  const publicImageName = PUBLIC_DIR + image.split("public/")[1];
+
+  try {
+    fs.unlinkSync(publicImageName);
+    //file removed
+    Parrot.remove({ _id: req.params.id })
+      .then((result) => {
+        res.status(200).json({ status: "ok" });
+      })
+      .catch((err) => {
+        res.status(400).json({ status: "fail" });
+      });
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 module.exports = router;

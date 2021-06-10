@@ -1,12 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const config = require('../config.json');
+const jwt = require("jsonwebtoken");
+const config = require("../config.json");
 
 const isAuth = (req, res) => {
-  console.log('req', req.headers);
-  return res.status(403).send('Access Denied');
-}
+  return res.status(403).send("Access Denied");
+};
 
 // middleware
 
@@ -27,9 +26,9 @@ const isAuth = (req, res) => {
 // }
 //
 
-router.get('/', (req, res) => {
-  console.log('test');
-  res.send('Hello');
-})
+router.get("/", (req, res) => {
+  console.log("test");
+  res.send("Hello");
+});
 
 module.exports = router;

@@ -1,0 +1,62 @@
+.parrots {
+
+  &__list {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+
+  &__wrapper {
+    padding: 20px;
+    box-shadow: 0 0 10px 0 rgba(0 0 0 / 20%);
+    cursor: pointer;
+    transition: box-shadow .3s ease-in;
+    border-radius: 3px;
+
+    &:hover {
+      box-shadow: 0 0 10px 0 rgba(0 0 0 / 40%);
+
+    }
+  }
+
+  &__name {
+    margin-bottom: 10px;
+
+    &-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__content {
+    display: flex;
+  }
+
+  &__image {
+    width: 100%;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 30%);
+    background-position: inherit;
+    background-size: cover;
+    height: 100%;
+
+    &-wrapper {
+      height: 100px;
+      min-width: 100px;
+    }
+  }
+
+  &__highlight {
+    padding: .2em;
+    & mark {
+      background-color: rgba(183, 228, 199, 0.5);
+      padding: 1px 0;
+      box-shadow: 0 0 10px 3px rgba(183, 228, 199, 0.5);
+      border-radius: 20%;
+    }
+  }
+
+  &__description {
+    padding: 0 10px;
+  }
+}

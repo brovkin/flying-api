@@ -1,15 +1,21 @@
-import React, { useEffect } from 'react';
-import { Button, Checkbox, Form, Input, Modal, Upload } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, Form, Input, Modal, Upload, Select } from 'antd';
 import { EditOutlined, UploadOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { editFormLayout } from '../../constants';
 import { apiRequest } from '../../helpers/apiRequest';
 import { updateParrot } from '../../features/parrots/parrotsSlice';
+import ColorItem from './ColorItem';
+import SelectColor from './SelectColor';
 
-const EditForm = ({ data, isOpen, handleClose }) => {
+const { Option } = Select;
+
+const EditForm = ({ data, isOpen, handleClose, countries }) => {
   const dispatch = useDispatch();
+  const [colorModal, setColorModal] = useState(false);
+  const [selectedColors, setSelectedColors] = useState([]);
   const [form] = Form.useForm();
-  const { id, name } = data;
+  const { id, name, image, colors } = data;
 
   useEffect(() => {
     /**
@@ -18,6 +24,10 @@ const EditForm = ({ data, isOpen, handleClose }) => {
      */
     form.resetFields();
   }, [data]);
+
+  useEffect(() => {
+    setSelectedColors(colors || []);
+  }, [colors]);
 
   const handleSubmit = async (data) => {
     const formData = new FormData();
@@ -29,7 +39,17 @@ const EditForm = ({ data, isOpen, handleClose }) => {
        */
       formData.append('image', data.image.file.originFileObj);
     }
+
+    const prepareColors = selectedColors.map((color) => ({
+      // without active flag
+      name: color.name,
+      hex: color.hex,
+    }));
+
     formData.append('name', data.name);
+    formData.append('latin', data.latin);
+    formData.append('habitat', JSON.stringify(data.habitat));
+    formData.append('colors', JSON.stringify(prepareColors));
     formData.append('description', data.description);
     formData.append('flying', data.flying);
 
@@ -74,6 +94,49 @@ const EditForm = ({ data, isOpen, handleClose }) => {
           <Input />
         </Form.Item>
         <Form.Item
+          label="По латыни"
+          name="latin"
+          rules={[
+            {
+              required: true,
+              message: 'Пожалуйста, заполните название',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Ареал обитания"
+          name="habitat"
+          rules={[
+            {
+              required: true,
+              message: 'Пожалуйста, заполните название',
+            },
+          ]}
+        >
+          <Select placeholder="Select habitat" mode="multiple" allowClear>
+            {!!countries &&
+              countries.length &&
+              countries.map((country, index) => {
+                return (
+                  <Option
+                    className="parrots__edit-form-habitat-option"
+                    key={index}
+                    value={country.name}
+                  >
+                    <img
+                      className="parrots__edit-form-habitat-flag"
+                      src={country.flag}
+                      alt=""
+                    />
+                    {country.name}
+                  </Option>
+                );
+              })}
+          </Select>
+        </Form.Item>
+        <Form.Item
           label="Описание"
           name="description"
           rules={[
@@ -100,6 +163,29 @@ const EditForm = ({ data, isOpen, handleClose }) => {
             <Button icon={<UploadOutlined />}>Загрузить</Button>
           </Upload>
         </Form.Item>
+        <Form.Item label="Цвет" name="selectedColors">
+          <Button onClick={() => setColorModal(true)}>Выбрать цвет</Button>
+          {!!selectedColors.length && (
+            <div className="parrots__add-form-color-wrapper">
+              {selectedColors.map((color) => {
+                return <ColorItem color={color} />;
+              })}
+            </div>
+          )}
+          <Modal
+            visible={colorModal}
+            onCancel={() => setColorModal(false)}
+            onOk={() => setColorModal(false)}
+            closable
+            width={1600}
+          >
+            <SelectColor
+              getSelectColors={(colors) => setSelectedColors(colors)}
+              previewImage={image}
+            />
+          </Modal>
+        </Form.Item>
+
         <Form.Item
           label="Летающий"
           name="flying"

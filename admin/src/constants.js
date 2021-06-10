@@ -1,5 +1,8 @@
 export const MAIN_API = 'http://localhost:8000';
 
+export const COUNTRIES_API_URL_BY_NAME =
+  'https://restcountries.eu/rest/v2/all?fields=name;flag';
+
 export const formLayout = {
   labelCol: {
     span: 6,
